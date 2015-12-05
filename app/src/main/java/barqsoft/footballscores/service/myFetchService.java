@@ -63,7 +63,9 @@ public class myFetchService extends IntentService
             URL fetch = new URL(fetch_build.toString());
             m_connection = (HttpURLConnection) fetch.openConnection();
             m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token",getString(R.string.api_key));
+            // TODO: Switch back to R.string.api_key when submitting.
+            //m_connection.addRequestProperty("X-Auth-Token",getString(R.string.api_key));
+            m_connection.addRequestProperty("X-Auth-Token",getString(R.string.Football_api_key));
             m_connection.connect();
 
             // Read the input stream into a String
@@ -110,14 +112,14 @@ public class myFetchService extends IntentService
         }
         try {
             if (JSON_data != null) {
-                Log.d(LOG_TAG,  JSON_data.toString());
+                //Log.d(LOG_TAG,  JSON_data.toString());
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
                 JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
                 if (matches.length() == 0) {
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
                     //processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
-                    Log.d(LOG_TAG, JSON_data.toString());
+                    //Log.d(LOG_TAG, JSON_data.toString());
                     return;
                 }
 
@@ -188,6 +190,7 @@ public class myFetchService extends IntentService
             {
 
                 JSONObject match_data = matches.getJSONObject(i);
+
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
                 League = League.replace(SEASON_LINK,"");
