@@ -9,22 +9,46 @@ public class Utilies
     // The codes can be found and matched via:
     // http://api.football-data.org/alpha/soccerseasons/
     public static final int SERIE_A = 401;
+
+    public static final int PRIMEIRA_LIGA = 402;
+
+    public static final int EREDIVISIE = 404;
     public static final int PREMIER_LEGAUE = 398;
     public static final int CHAMPIONS_LEAGUE = 405;
+
     public static final int PRIMERA_DIVISION = 399;
+    public static final int SEGUNDA_DIVISION = 400;
+
+    public static final int LIGUE1 = 396;
+    public static final int LIGUE2 = 397;
 
     // There are 3 Bundesliga from the api
-    public static final int BUNDESLIGA = 403;
+    public static final int BUNDESLIGA = 394;
+    public static final int BUNDESLIGA2 = 395;
+    public static final int BUNDESLIGA3 = 403;
+
     public static String getLeague(int league_num)
     {
         switch (league_num)
         {
             // League numbers.
-            case SERIE_A : return "Seria A";
+            case SERIE_A : return "Serie A";
             case PREMIER_LEGAUE : return "Premier League";
             case CHAMPIONS_LEAGUE : return "UEFA Champions League";
+
             case PRIMERA_DIVISION : return "Primera Division";
+            case SEGUNDA_DIVISION : return "Segunda Division";
+
+            case PRIMEIRA_LIGA: return "Primeira Liga";
+
+            case EREDIVISIE: return "Eredivisie";
+
+            case LIGUE1: return "Ligue 1";
+            case LIGUE2: return "Ligue 2";
+
             case BUNDESLIGA : return "Bundesliga";
+            case BUNDESLIGA2 : return "Bundesliga 2";
+            case BUNDESLIGA3 : return "Bundesliga 3";
             default: return "Not known League Please report";
         }
     }

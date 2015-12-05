@@ -147,7 +147,7 @@ public class myFetchService extends IntentService
         final String PRIMERA_DIVISION = "399";
         final String SEGUNDA_DIVISION = "400";
         final String SERIE_A = "401";
-        final String PRIMERA_LIGA = "402";
+        final String PRIMEIRA_LIGA = "402";
         final String Bundesliga3 = "403";
         final String EREDIVISIE = "404";
 
@@ -196,10 +196,16 @@ public class myFetchService extends IntentService
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
                 if(     League.equals(PREMIER_LEAGUE)      ||
+                        League.equals(LIGUE1)              ||
+                        League.equals(LIGUE2)              ||
                         League.equals(SERIE_A)             ||
                         League.equals(BUNDESLIGA1)         ||
                         League.equals(BUNDESLIGA2)         ||
-                        League.equals(PRIMERA_DIVISION)     )
+                        League.equals(Bundesliga3)         ||
+                        League.equals(PRIMEIRA_LIGA)       ||
+                        League.equals(EREDIVISIE)          ||
+                        League.equals(PRIMERA_DIVISION)    ||
+                        League.equals(SEGUNDA_DIVISION)     )
                 {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");
