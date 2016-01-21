@@ -77,6 +77,24 @@
     <color name="red12">#FFAFAF</color>
     <color name="red13">#FFCACA</color>
     <color name="red14">#FFE4E4</color>
+    
+    <!-- Using the "Light Orange" Material Palette. -->
+    <color name="primary">#FF9800</color>
+    <color name="primary_dark">#F57C00</color>
+    <color name="primary_light">#FFE0B2</color>
+    <color name="accent">#FF5722</color>
+
+    <!-- Text Colors. -->
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- our detail accent colors -->
+    <color name="detail_accent_pane_background">#455A64</color>
+    <color name="detail_accent_label">#90A4AE</color>
+
+
     <color name="transparent">#00000000</color>
 
 
