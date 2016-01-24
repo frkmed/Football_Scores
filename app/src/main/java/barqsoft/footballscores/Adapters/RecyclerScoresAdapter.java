@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,15 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import barqsoft.footballscores.Database.DatabaseContract;
+import barqsoft.footballscores.ItemChoiceManager;
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.Utils.Utilies;
+
 /**
  * Created by yehya khaled on 2/26/2015.
  */
-public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoresAdapterViewHolder> {
+public class RecyclerScoresAdapter extends RecyclerView.Adapter<RecyclerScoresAdapter.ScoresAdapterViewHolder> {
     public static final int COL_HOME = 3;
     public static final int COL_AWAY = 4;
     public static final int COL_HOME_GOALS = 6;
     public static final int COL_AWAY_GOALS = 7;
     public static final int COL_DATE = 1;
+    public static final int COL_THE_ID = 1;
     public static final int COL_LEAGUE = 5;
     public static final int COL_MATCHDAY = 9;
     public static final int COL_ID = 8;
@@ -38,7 +44,7 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoresAdap
     final private ItemChoiceManager mICM;
 
 
-    //public ScoresAdapter(Context context,Cursor cursor,int flags)
+    //public RecyclerScoresAdapter(Context context,Cursor cursor,int flags)
     //{
     //    super(context,cursor,flags);
     //}
@@ -102,7 +108,7 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoresAdap
 
 
 
-    public ScoresAdapter(Context context, ScoresAdapterOnClickHandler dh, View emptyView, int choiceMode)
+    public RecyclerScoresAdapter(Context context, ScoresAdapterOnClickHandler dh, View emptyView, int choiceMode)
     {
         mContext = context;
         mClickHandler = dh;

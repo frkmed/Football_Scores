@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.Utils;
 
 import android.content.Context;
 import android.text.format.Time;

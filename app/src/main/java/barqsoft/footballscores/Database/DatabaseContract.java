@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.Database;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -44,6 +44,19 @@ public class DatabaseContract
         {
             return BASE_CONTENT_URI.buildUpon().appendPath("date").build();
         }
+        public static Uri buildScoreWithMatchId(long movieId) {
+            //long normalizedDate = normalizeDate(startDate);
+            return BASE_CONTENT_URI.buildUpon().appendPath("id").appendQueryParameter(MATCH_ID, Long.toString(movieId)).build();
+        }
+
+        public static long getTheMovieIDFromUri(Uri uri) {
+            String dateString = uri.getQueryParameter(MATCH_ID);
+            if (null != dateString && dateString.length() > 0)
+                return Long.parseLong(dateString);
+            else
+                return 0;
+        }
+
     }
     //URI data
     public static final String CONTENT_AUTHORITY = "barqsoft.footballscores";

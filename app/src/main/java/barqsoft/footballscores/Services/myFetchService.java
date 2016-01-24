@@ -1,4 +1,4 @@
-package barqsoft.footballscores.service;
+package barqsoft.footballscores.Services;
 
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 
 /**
@@ -261,12 +261,12 @@ public class myFetchService extends IntentService
                     //log spam
 
                     //Log.v(LOG_TAG,match_id);
-                    Log.v(LOG_TAG,mDate);
-                    Log.v(LOG_TAG,mTime);
-                    Log.v(LOG_TAG,"Home:" + Home);
-                    Log.v(LOG_TAG,Home_goals);
-                    Log.v(LOG_TAG,"Away" + Away);
-                    Log.v(LOG_TAG,Away_goals);
+                    //Log.v(LOG_TAG,mDate);
+                    //Log.v(LOG_TAG,mTime);
+                    //Log.v(LOG_TAG,"Home:" + Home);
+                    //Log.v(LOG_TAG,Home_goals);
+                    //Log.v(LOG_TAG,"Away" + Away);
+                    //Log.v(LOG_TAG,Away_goals);
 
                     values.add(match_values);
                 }

@@ -1,15 +1,18 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity {
+import barqsoft.footballscores.Fragments.MainScreenFragment;
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.Adapters.SectionsPagerAdapter;
+
+public class MainActivity extends AppCompatActivity implements MainScreenFragment.Callback {
     public static int selected_match_id;
     public static int current_fragment = 2;
     public static String LOG_TAG = "MainActivity";
@@ -57,9 +60,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.v(save_tag, "will save");
-        Log.v(save_tag, "fragment: " + String.valueOf(my_main.mPagerHandler.getCurrentItem()));
-        Log.v(save_tag, "selected id: " + selected_match_id);
+        //Log.v(save_tag, "will save");
+        //Log.v(save_tag, "fragment: " + String.valueOf(my_main.mPagerHandler.getCurrentItem()));
+        //Log.v(save_tag, "selected id: " + selected_match_id);
         outState.putInt("Pager_Current", my_main.mPagerHandler.getCurrentItem());
         outState.putInt("Selected_match", selected_match_id);
         getSupportFragmentManager().putFragment(outState, "my_main", my_main);
@@ -68,12 +71,23 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.v(save_tag, "will retrive");
-        Log.v(save_tag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
-        Log.v(save_tag, "selected id: " + savedInstanceState.getInt("Selected_match"));
+        //Log.v(save_tag, "will retrive");
+        //Log.v(save_tag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
+        //Log.v(save_tag, "selected id: " + savedInstanceState.getInt("Selected_match"));
         current_fragment = savedInstanceState.getInt("Pager_Current");
         selected_match_id = savedInstanceState.getInt("Selected_match");
         my_main = (SectionsPagerAdapter) getSupportFragmentManager().getFragment(savedInstanceState, "my_main");
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
+    @Override
+    public void onItemSelected(Long matchID)
+    {
+        String matchId = Long.toString(matchID);
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT, matchId);
+            startActivity(intent);
+
     }
 }

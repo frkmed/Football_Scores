@@ -1,9 +1,10 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,17 +21,21 @@ import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
-import barqsoft.footballscores.service.myFetchService;
+import barqsoft.footballscores.Activities.MainActivity;
+import barqsoft.footballscores.Database.DatabaseContract;
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.Adapters.RecyclerScoresAdapter;
+import barqsoft.footballscores.Services.myFetchService;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
-{
+public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
-    public ScoresAdapter mScoresAdapter;
+    public RecyclerScoresAdapter mRecyclerScoresAdapter;
     public static final int SCORES_LOADER = 0;
+    public static final int COL_ID = 8;
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
 
@@ -42,19 +47,30 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     private static final String SELECTED_KEY = "selected_position";
 
 
-    public MainScreenFragment()
-    {
+    public MainScreenFragment() {
     }
 
-    private void update_scores()
-    {
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Long matchId);
+    }
+
+    private void update_scores() {
         Intent service_start = new Intent(getActivity(), myFetchService.class);
         getActivity().startService(service_start);
     }
-    public void setFragmentDate(String date)
-    {
+
+    public void setFragmentDate(String date) {
         fragmentdate[0] = date;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,19 +89,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         View emptyView = rootView.findViewById(R.id.recyclerview_scores_empty);
 
-
-
-
-        //mRecyclerView.setAdapter(mScoresAdapter);
-        //score_list.setAdapter(mScoresAdapter);
-
-        mScoresAdapter = new ScoresAdapter(getActivity(), new ScoresAdapter.ScoresAdapterOnClickHandler() {
+        mRecyclerScoresAdapter = new RecyclerScoresAdapter(getActivity(), new RecyclerScoresAdapter.ScoresAdapterOnClickHandler() {
             @Override
-            public void onClick(Long match_Id, ScoresAdapter.ScoresAdapterViewHolder vh) {
+            public void onClick(Long match_Id, RecyclerScoresAdapter.ScoresAdapterViewHolder vh) {
                 //String locationSetting = Utility.getPreferredLocation(getActivity());
 
                 mPosition = vh.getAdapterPosition();
                 Log.v(LOG_TAG, String.valueOf(mPosition));
+
+                ((Callback) getActivity()).onItemSelected(match_Id);
+
             }
         }, emptyView, mChoiceMode);
 
@@ -95,28 +108,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 // swapout in onLoadFinished.
                 mPosition = savedInstanceState.getInt(SELECTED_KEY);
             }
-            mScoresAdapter.onRestoreInstanceState(savedInstanceState);
+            mRecyclerScoresAdapter.onRestoreInstanceState(savedInstanceState);
         }
 
 
-
-        getLoaderManager().initLoader(SCORES_LOADER,null,this);
-        mScoresAdapter.detail_match_id = MainActivity.selected_match_id;
-        //score_list.setOnItemClickListener(
-        //        new AdapterView.OnItemClickListener()
-        //{
-        //    @Override
-        //    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        //    {
-        //        ViewHolder selected = (ViewHolder) view.getTag();
-        //        mScoresAdapter.detail_match_id = selected.match_id;
-        //        MainActivity.selected_match_id = (int) selected.match_id;
-        //        mScoresAdapter.notifyDataSetChanged();
-        //    }
-        //});
-        mRecyclerView.setAdapter(mScoresAdapter);
+        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        mRecyclerScoresAdapter.detail_match_id = MainActivity.selected_match_id;
+        mRecyclerView.setAdapter(mRecyclerScoresAdapter);
         return rootView;
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -126,7 +127,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
-        mScoresAdapter.onSaveInstanceState(outState);
+        mRecyclerScoresAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -134,23 +135,25 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
-        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.MainScreenFragment,0,0);
+        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.MainScreenFragment, 0, 0);
         mChoiceMode = a.getInt(R.styleable.MainScreenFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
         mAutoSelectView = a.getBoolean(R.styleable.MainScreenFragment_autoSelectView, false);
         a.recycle();
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle)
-    {
-        return new CursorLoader(getActivity(),DatabaseContract.scores_table.buildScoreWithDate(),
-                null,null,fragmentdate,null);
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(getActivity(),
+                DatabaseContract.scores_table.buildScoreWithDate(),
+                null,
+                null,
+                fragmentdate,
+                null);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor data)
-    {
-        mScoresAdapter.swapCursor(data);
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor data) {
+        mRecyclerScoresAdapter.swapCursor(data);
 
         if (mPosition != RecyclerView.NO_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
@@ -160,7 +163,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
         updateEmptyView();
 
-        if ( data.getCount() > 0 ) {
+        if (data.getCount() > 0) {
             mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -168,11 +171,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int itemPosition = mScoresAdapter.getSelectedItemPosition();
-                        if ( RecyclerView.NO_POSITION == itemPosition ) itemPosition = 0;
+                        int itemPosition = mRecyclerScoresAdapter.getSelectedItemPosition();
+                        if (RecyclerView.NO_POSITION == itemPosition) itemPosition = 0;
                         RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(itemPosition);
-                        if ( null != vh && mAutoSelectView ) {
-                            mScoresAdapter.selectView( vh );
+                        if (null != vh && mAutoSelectView) {
+                            mRecyclerScoresAdapter.selectView(vh);
                         }
                         return true;
                     }
@@ -183,9 +186,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void updateEmptyView() {
-        if ( mScoresAdapter.getItemCount() == 0 ) {
+        if (mRecyclerScoresAdapter.getItemCount() == 0) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_scores_empty);
-            if ( null != tv ) {
+            if (null != tv) {
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_scores_list;
                 tv.setText(message);
@@ -194,9 +197,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader)
-    {
-        mScoresAdapter.swapCursor(null);
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        mRecyclerScoresAdapter.swapCursor(null);
     }
 
 

@@ -5,7 +5,6 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="toolbarStyle">@style/Toolbar</item>
     </style>
 
     <!-- Main activity theme. -->
@@ -28,10 +27,10 @@
         <item name="logo">@drawable/ic_launcher</item>
     </style>
 
-    <!-- Style for forecast listview -->
-    <style name="FootballScoresListStyle">
-        <!-- Here it's a stub.  In screens of sufficient width, this style includes modifications
-        for two-pane layout -->
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
