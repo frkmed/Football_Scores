@@ -28,6 +28,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -49,6 +51,7 @@ import java.util.Map;
 
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.Utils.Utilies;
 
 /**
  * Created by paskalstoyanov on 22/01/16.
@@ -76,6 +79,27 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView textView;
     RequestQueue requestQueue;
 
+    // Details score_list_item
+
+    private TextView homeName;
+    private TextView awayName;
+    private ImageView homeCrest;
+    private ImageView awayCrest;
+    private TextView scoreText;
+    private TextView dataDateTextview;
+    private TextView leagueTextview;
+    private Button mShareButton;
+
+    // Details additional pane
+    private TextView matchdayTextview;
+    private TextView totalMatches_count;
+    private TextView homeTeam_name_add_pane;
+    private TextView homeTeam_wins_add_pane;
+    private TextView awayTeam_name_add_pane;
+    private TextView awayTeam_wins_add_pane;
+    private TextView draws_count;
+
+
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -99,7 +123,27 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         View rootView = inflater.inflate(R.layout.fragment_detail_start, container, false);
 
-        textView = (TextView) rootView.findViewById(R.id.detail_text);
+        // Details score list item
+        homeName = (TextView) rootView.findViewById(R.id.home_name);
+        awayName = (TextView) rootView.findViewById(R.id.away_name);
+        homeCrest = (ImageView) rootView.findViewById(R.id.home_crest);
+        awayCrest = (ImageView) rootView.findViewById(R.id.away_crest);
+        scoreText = (TextView) rootView.findViewById(R.id.score_textview);
+        dataDateTextview = (TextView) rootView.findViewById(R.id.data_date_textview);
+        leagueTextview = (TextView) rootView.findViewById(R.id.league_textview);
+        matchdayTextview = (TextView) rootView.findViewById(R.id.matchday_textview);
+        mShareButton = (Button) rootView.findViewById(R.id.share_button);
+        mShareButton.setVisibility(View.VISIBLE);
+
+
+
+        // Details additional pane
+        totalMatches_count = (TextView) rootView.findViewById(R.id.detail_total_matches_count_textview);
+        homeTeam_name_add_pane = (TextView) rootView.findViewById(R.id.home_name_label_textview);
+        awayTeam_name_add_pane = (TextView) rootView.findViewById(R.id.away_name_label_textview);
+        homeTeam_wins_add_pane = (TextView) rootView.findViewById(R.id.detail_home_wins_textview);
+        awayTeam_wins_add_pane = (TextView) rootView.findViewById(R.id.detail_away_wins_textview);
+        draws_count = (TextView) rootView.findViewById(R.id.detail_draw_count_textview);
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -110,7 +154,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+        if (savedInstanceState == null){
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+        }
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -142,11 +188,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             return;
         }
 
-        Log.v(LOG_TAG, data.getString(COL_ID) + " Loaded");
-        Log.v(LOG_TAG, data.getString(COL_HOME)+ " Loaded");
-        Log.v(LOG_TAG, data.getString(COL_AWAY)+ " Loaded");
-        Log.v(LOG_TAG, data.getString(COL_DATE)+ " Loaded");
-        Log.v(LOG_TAG, data.getString(COL_DATE)+ " Loaded");
+        // Detail Score List Item
+        String dataHomeName = data.getString(COL_HOME);
+        String dataAwayName = data.getString(COL_AWAY);
+        String score = Utilies.getScores(data.getInt(COL_HOME_GOALS), data.getInt(COL_AWAY_GOALS));
+        String dataDate = data.getString(COL_MATCHTIME);
+        String league = Utilies.getLeague(data.getInt(COL_LEAGUE));
+        String matchday = Utilies.getMatchDay(data.getInt(COL_MATCHDAY),
+                data.getInt(COL_LEAGUE));
+
+        homeName.setText(dataHomeName);
+        awayName.setText(dataAwayName);
+        homeCrest.setImageResource(Utilies.getTeamCrestByTeamName(
+                data.getString(COL_HOME)));
+        awayCrest.setImageResource(Utilies.getTeamCrestByTeamName(
+                data.getString(COL_AWAY)));
+        scoreText.setText(score);
+        dataDateTextview.setText(dataDate);
+        leagueTextview.setText(league);
+        matchdayTextview.setText(matchday);
+
+
+        // Detail additional pane
+        homeTeam_name_add_pane.setText(dataHomeName);
+        awayTeam_name_add_pane.setText(dataAwayName);
+
+
+
 
 
         CustomJsonObjectRequest jsonObjectRequest = new CustomJsonObjectRequest(Request.Method.GET,
@@ -162,11 +230,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                             JSONObject jsonObject = response.getJSONObject("head2head");
                             String count = jsonObject.getString("count");
+                            totalMatches_count.setText(count);
                             String homeWins = jsonObject.getString("homeTeamWins");
+                            homeTeam_wins_add_pane.setText(homeWins + " wins");
                             String awayWins = jsonObject.getString("awayTeamWins");
+                            awayTeam_wins_add_pane.setText(awayWins + " wins");
                             String draws = jsonObject.getString("draws");
-                            Log.v(LOG_TAG, "count " + count + " Home Wins:" + homeWins
-                                    + " Away Wins" + awayWins + " Draws:" + draws);
+                            draws_count.setText(draws);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

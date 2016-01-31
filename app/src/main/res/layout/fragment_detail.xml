@@ -1,21 +1,111 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/detail_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textShortMessage"
-        android:text="@string/hello_world" />
+    <include layout="@layout/scores_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/arsenal" />
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/detail_additional_pane"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        app:columnCount="2"
+        android:background="@color/detail_accent_pane_background"
+        android:paddingBottom="@dimen/abc_list_item_padding_horizontal_material"
+        android:paddingTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:paddingLeft="@dimen/scores_detail_horizontal_padding"
+        android:paddingStart="@dimen/scores_detail_horizontal_padding"
+        android:paddingRight="@dimen/scores_detail_horizontal_padding"
+        android:paddingEnd="@dimen/scores_detail_horizontal_padding">
 
 
-</FrameLayout>
+
+        <TextView
+            android:id="@+id/total_matches_label_textview"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:text="@string/head2head_total_matches"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/detail_accent_label"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <TextView
+            android:id="@+id/detail_total_matches_count_textview"
+            android:gravity="center_vertical"
+            tools:text="10"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@android:color/white"
+            app:layout_gravity="fill"/>
+
+
+
+        <TextView
+            android:id="@+id/home_name_label_textview"
+            android:fontFamily="sans-serif"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/detail_accent_label"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"/>
+
+
+        <TextView
+            android:id="@+id/detail_home_wins_textview"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@android:color/white"
+            app:layout_gravity="fill"/>
+
+
+        <TextView
+            android:id="@+id/away_name_label_textview"
+            android:fontFamily="sans-serif"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/detail_accent_label"
+            android:textSize="20sp"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+
+        <TextView
+            android:id="@+id/detail_away_wins_textview"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@android:color/white"
+            app:layout_gravity="fill" />
+
+        <TextView
+            android:id="@+id/draws_label_textview"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:text="@string/draws_title"
+            android:textColor="@color/detail_accent_label"
+            android:textSize="20sp"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+
+        <TextView
+            android:id="@+id/detail_draw_count_textview"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@android:color/white"
+            app:layout_gravity="fill" />
+
+    </android.support.v7.widget.GridLayout>
+
+
+</LinearLayout>

@@ -6,6 +6,12 @@
     <dimen name="share_button_margin">150dp</dimen>
     <dimen name="TeamNames">17sp</dimen>
     <dimen name="Score">30sp</dimen>
-    <dimen name="League">15sp</dimen>
+    <dimen name="League">16sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="scores_detail_horizontal_padding">32dp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="today_icon">96dp</dimen>
+
+
 </resources>

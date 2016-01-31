@@ -85,6 +85,7 @@ public class Utilies
         }
     }
 
+
     public static String getScores(int home_goals,int awaygoals)
     {
         if(home_goals < 0 || awaygoals < 0)
@@ -113,7 +114,7 @@ public class Utilies
             case "West Bromwich Albion" : return R.drawable.west_bromwich_albion_hd_logo;
             case "Sunderland AFC" : return R.drawable.sunderland;
             case "Stoke City FC" : return R.drawable.stoke_city;
-            default: return R.drawable.no_icon;
+            default: return R.drawable.arsenal;
         }
     }
 }

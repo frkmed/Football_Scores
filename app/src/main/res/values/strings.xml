@@ -48,4 +48,10 @@
 
     <string name="title_activity_detail">Detail</string>
 
+    <!-- Detail additional pane labels-->
+    <string name="league_match_day">League match day</string>
+    <string name="head_2_head_title">Head2Head</string>
+    <string name="head2head_total_matches">Head2Head matches</string>
+    <string name="draws_title">Draws</string>
+
 </resources>

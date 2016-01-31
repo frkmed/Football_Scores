@@ -21,6 +21,8 @@ import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import barqsoft.footballscores.Activities.MainActivity;
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
@@ -115,6 +117,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mRecyclerScoresAdapter.detail_match_id = MainActivity.selected_match_id;
         mRecyclerView.setAdapter(mRecyclerScoresAdapter);
+        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext()).build());
         return rootView;
     }
 

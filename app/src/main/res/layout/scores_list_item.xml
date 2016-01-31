@@ -2,16 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/background"
     android:elevation="4dp"
-    android:orientation="vertical"
-    android:background="@drawable/touch_selector">
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/main_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="5dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -21,9 +24,11 @@
 
             <ImageView
                 android:id="@+id/home_crest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_width="@dimen/today_icon"
+                android:layout_height="@dimen/today_icon"
+                android:layout_gravity="center"
+                android:maxHeight="@dimen/today_icon"
+                android:maxWidth="@dimen/today_icon" />
 
             <TextView
                 android:id="@+id/home_name"
@@ -71,9 +76,11 @@
 
             <ImageView
                 android:id="@+id/away_crest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_width="@dimen/today_icon"
+                android:layout_height="@dimen/today_icon"
+                android:layout_gravity="center"
+                android:maxHeight="@dimen/today_icon"
+                android:maxWidth="@dimen/today_icon" />
 
             <TextView
                 android:id="@+id/away_name"
@@ -88,9 +95,9 @@
 
     <LinearLayout
         android:id="@+id/details_text"
-        android:layout_below="@+id/main_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/main_text"
         android:layout_marginTop="20dp">
 
         <TextView
@@ -100,7 +107,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/test_text"
-            android:textColor="@android:color/black"
+            android:textColor="@color/secondary_text"
             android:textSize="@dimen/League" />
 
         <TextView
@@ -110,35 +117,21 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/test_text"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/League" />
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/League"
+            android:paddingBottom="@dimen/default_gap"/>
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_below="@+id/details_text"
+    <Button
+        android:visibility="invisible"
+        android:id="@+id/share_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center|end"
+        android:drawableLeft="@android:drawable/ic_menu_share"
+        android:drawableStart="@android:drawable/ic_menu_share"
+        android:text="@string/share_text" />
 
-        <Button
-            android:id="@+id/share_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableLeft="@android:drawable/ic_menu_share"
-            android:drawableStart="@android:drawable/ic_menu_share"
-            android:gravity="center"
-            android:paddingLeft="120dp"
-            android:paddingStart="120dp"
-            android:paddingRight="120dp"
-            android:paddingEnd = "120dp"
-            android:text="@string/share_text" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/details_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></FrameLayout>
 </RelativeLayout>
 
 
