@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import barqsoft.footballscores.Fragments.MainScreenFragment;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Adapters.SectionsPagerAdapter;
+import barqsoft.footballscores.Sync.FootballScoresSyncAdapter;
 
 public class MainActivity extends AppCompatActivity implements MainScreenFragment.Callback {
     public static int selected_match_id;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MainScreenFragmen
                     .add(R.id.container, my_main)
                     .commit();
         }
+
+        FootballScoresSyncAdapter.initializeSyncAdapter(this);
     }
 
 

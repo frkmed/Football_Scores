@@ -61,4 +61,8 @@
     <string name="sync_account_type">footballscores.barqsoft</string>
     <string name="content_authority">barqsoft.footballscores</string>
 
+    <!-- Strings related to Widgets -->
+    <string name="title_widget_today">FootballScores Today</string>
+
+
 </resources>
