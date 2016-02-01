@@ -53,5 +53,12 @@
     <string name="head_2_head_title">Head2Head</string>
     <string name="head2head_total_matches">Head2Head matches</string>
     <string name="draws_title">Draws</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <!-- Account type (for sync-adapter authenticator) -->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">footballscores.barqsoft</string>
+    <string name="content_authority">barqsoft.footballscores</string>
 
 </resources>

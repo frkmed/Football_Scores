@@ -28,6 +28,7 @@ import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Adapters.RecyclerScoresAdapter;
 import barqsoft.footballscores.Services.myFetchService;
+import barqsoft.footballscores.Sync.FootballScoresSyncAdapter;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -65,8 +66,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void update_scores() {
-        Intent service_start = new Intent(getActivity(), myFetchService.class);
-        getActivity().startService(service_start);
+        //Intent service_start = new Intent(getActivity(), myFetchService.class);
+        //getActivity().startService(service_start);
+
+        FootballScoresSyncAdapter.syncImmediately(getActivity());
     }
 
     public void setFragmentDate(String date) {
