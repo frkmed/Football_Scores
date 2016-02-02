@@ -27,7 +27,6 @@ import barqsoft.footballscores.Activities.MainActivity;
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Adapters.RecyclerScoresAdapter;
-import barqsoft.footballscores.Services.myFetchService;
 import barqsoft.footballscores.Sync.FootballScoresSyncAdapter;
 
 /**
@@ -45,8 +44,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private int mPosition = RecyclerView.NO_POSITION;
+
     private boolean mUseTodayLayout, mAutoSelectView;
     private int mChoiceMode;
+    private boolean mHoldForTransition;
+    private long mInitialSelectedDate = -1;
     private static final String SELECTED_KEY = "selected_position";
 
 
@@ -76,24 +78,35 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         fragmentdate[0] = date;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        //setHasOptionsMenu(true);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
-        update_scores();
-        //final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
-
-        // The ForecastAdapter will take data from a source and
-        // use it to populate the RecyclerView it's attached to.
+                             final Bundle savedInstanceState)
+    {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
+        // Get a reference to the RecyclerView, and attach this adapter to it.
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.scores_recyclerview);
+
         // Set the layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         View emptyView = rootView.findViewById(R.id.recyclerview_scores_empty);
+        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext()).build());
 
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // The ScoresAdapter will take data from a source and
+        // use it to populate the RecyclerView it's attached to.
         mRecyclerScoresAdapter = new RecyclerScoresAdapter(getActivity(), new RecyclerScoresAdapter.ScoresAdapterOnClickHandler() {
             @Override
             public void onClick(Long match_Id, RecyclerScoresAdapter.ScoresAdapterViewHolder vh) {
@@ -107,35 +120,44 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             }
         }, emptyView, mChoiceMode);
 
+        // specify an adapter (see also next example)
+        mRecyclerView.setAdapter(mRecyclerScoresAdapter);
+
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(SELECTED_KEY)) {
-                // The Recycler View probably hasn't even been populated yet.  Actually perform the
-                // swapout in onLoadFinished.
-                mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            }
             mRecyclerScoresAdapter.onRestoreInstanceState(savedInstanceState);
         }
 
 
-        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        //getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mRecyclerScoresAdapter.detail_match_id = MainActivity.selected_match_id;
-        mRecyclerView.setAdapter(mRecyclerScoresAdapter);
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext()).build());
+
+
         return rootView;
     }
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // We hold for transition here just in-case the activity
+        // needs to be re-created. In a standard return transition,
+        // this doesn't actually make a difference.
+        if ( mHoldForTransition ) {
+            getActivity().supportPostponeEnterTransition();
+        }
+        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to RecyclerView.NO_POSITION,
-        // so check for that before storing.
-        if (mPosition != RecyclerView.NO_POSITION) {
-            outState.putInt(SELECTED_KEY, mPosition);
-        }
         mRecyclerScoresAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
+
 
 
     @Override
@@ -203,9 +225,19 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mRecyclerView) {
+            mRecyclerView.clearOnScrollListeners();
+        }
+    }
+
+    @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mRecyclerScoresAdapter.swapCursor(null);
     }
+
+
 
 
 }

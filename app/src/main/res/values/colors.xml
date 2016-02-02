@@ -18,7 +18,9 @@
     <color name="detail_accent_label">#90A4AE</color>
 
 
+    <!-- Transparent -->
     <color name="transparent">#00000000</color>
+    <color name="secondary_seethrough">#5affe0b2</color>
 
 
 </resources>

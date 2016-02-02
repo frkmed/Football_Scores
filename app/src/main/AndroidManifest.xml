@@ -23,7 +23,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,8 +34,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
         </activity>
-
-        <service android:name=".Services.myFetchService" />
 
         <activity
             android:name=".Activities.DetailActivity"
@@ -64,7 +61,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-        !-- The SyncAdapter service -->
+        <!-- The SyncAdapter service -->
         <service
             android:name=".Sync.FootballScoresSyncService"
             android:exported="true">
@@ -77,7 +74,9 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <receiver android:name=".Widget.TodayWidgetProvider">
+        <!-- Single widget. Disabled from bools. -->
+        <receiver android:name=".Widget.TodayWidgetProvider"
+            android:enabled="@bool/widget_single_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
@@ -88,13 +87,17 @@
                 android:resource="@xml/today_widget_provider_info" />
         </receiver>
 
-        <service android:name=".Widget.TodayWidgetIntentService" />
+        <service
+            android:name=".Widget.TodayWidgetIntentService"
+            android:enabled="@bool/widget_single_enabled" />
 
-        <receiver android:name=".Widget.DetailWidgetProvider"
+        <!-- Collection widget. -->
+        <receiver
+            android:name=".Widget.DetailWidgetProvider"
             android:enabled="@bool/widget_detail_enabled">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

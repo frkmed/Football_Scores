@@ -19,7 +19,7 @@
     <LinearLayout
         android:id="@+id/widget"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="@dimen/list_icon"
         android:background="@color/primary"
         android:orientation="horizontal">
 
@@ -40,14 +40,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/primary_light">
+        android:background="@color/secondary_seethrough">
 
         <ListView
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
-            android:dividerHeight="0dp"
+            android:dividerHeight="1dp"
             tools:listitem="@layout/widget_detail_list_item" />
 
         <TextView

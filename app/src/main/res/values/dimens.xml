@@ -12,6 +12,8 @@
 
     <!-- Icon Sizes -->
     <dimen name="today_icon">96dp</dimen>
+    <dimen name="list_icon">40dp</dimen>
+
 
     <!--
 Refer to App Widget Documentation for margin information

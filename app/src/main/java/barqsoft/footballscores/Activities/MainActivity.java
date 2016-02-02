@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements MainScreenFragmen
                     .add(R.id.container, my_main)
                     .commit();
         }
-
         FootballScoresSyncAdapter.initializeSyncAdapter(this);
     }
 

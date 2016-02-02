@@ -117,6 +117,7 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                 String formattedScore =
                         Utilies.getScores(homeGoals, awayGoals);
                 String dateText = data.getString(COL_MATCHTIME);
+                views.setTextViewText(R.id.score_textview,formattedScore);
                 views.setTextViewText(R.id.data_date_textview, dateText);
 
                 views.setImageViewResource(R.id.home_crest, home_crest);

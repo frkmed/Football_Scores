@@ -15,12 +15,17 @@
     android:id="@+id/widget_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="2dp"
     android:background="@drawable/touch_selector">
 
     <LinearLayout
         android:id="@+id/main_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?android:attr/listPreferredItemHeight"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -31,11 +36,9 @@
 
             <ImageView
                 android:id="@+id/home_crest"
-                android:layout_width="@dimen/today_icon"
-                android:layout_height="@dimen/today_icon"
-                android:layout_gravity="center"
-                android:maxHeight="@dimen/today_icon"
-                android:maxWidth="@dimen/today_icon" />
+                android:layout_width="@dimen/list_icon"
+                android:layout_height="@dimen/list_icon"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/home_name"
@@ -43,8 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:textColor="@color/primary_text"
                 android:text="@string/test_text"
-                android:textSize="@dimen/TeamNames" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
         </LinearLayout>
 
         <LinearLayout
@@ -61,7 +65,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/test_text"
-                android:textSize="@dimen/Score" />
+                android:textColor="@color/primary_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
             <TextView
                 android:id="@+id/data_date_textview"
@@ -70,7 +75,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-
+                android:textColor="@color/secondary_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 android:text="@string/test_text" />
 
         </LinearLayout>
@@ -83,11 +89,9 @@
 
             <ImageView
                 android:id="@+id/away_crest"
-                android:layout_width="@dimen/today_icon"
-                android:layout_height="@dimen/today_icon"
-                android:layout_gravity="center"
-                android:maxHeight="@dimen/today_icon"
-                android:maxWidth="@dimen/today_icon" />
+                android:layout_width="@dimen/list_icon"
+                android:layout_height="@dimen/list_icon"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/away_name"
@@ -96,8 +100,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/test_text"
-                android:textSize="@dimen/TeamNames" />
+                android:textColor="@color/primary_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
         </LinearLayout>
+
+
     </LinearLayout>
 
 

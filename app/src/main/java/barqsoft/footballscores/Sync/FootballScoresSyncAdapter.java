@@ -354,9 +354,9 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         // Create the account type and default account
         Account newAccount = new Account(
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
-
+        Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
         // If the password doesn't exist, the account doesn't exist
-        if ( null == accountManager.getPassword(newAccount) )
+        if ( null == accountManager.getPassword(newAccount))
         {
 
         /*

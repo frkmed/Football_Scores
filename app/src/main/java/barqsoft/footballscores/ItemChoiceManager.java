@@ -48,7 +48,6 @@ public class ItemChoiceManager {
 
     private ItemChoiceManager() {
     }
-
     ;
 
     public ItemChoiceManager(RecyclerView.Adapter adapter) {
