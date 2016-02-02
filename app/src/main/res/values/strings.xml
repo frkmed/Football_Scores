@@ -64,5 +64,8 @@
     <!-- Strings related to Widgets -->
     <string name="title_widget_today">FootballScores Today</string>
 
+    <!-- Shared preferences for match count -->
+    <string name="today_match_count_pref">match_count</string>
+    <string name="today_match_count_key">today_count_key</string>
 
 </resources>

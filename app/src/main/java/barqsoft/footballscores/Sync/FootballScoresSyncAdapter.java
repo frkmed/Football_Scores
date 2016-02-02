@@ -8,13 +8,13 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -300,7 +300,14 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
     // Base for DayMatchCount, which will be displayed inside
     // the appBar when expanded.
     private void updateDayMatchCount() {
+
+
+
         Context context = getContext();
+        SharedPreferences settings = context.getSharedPreferences(
+                context.getString(R.string.today_match_count_pref), context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
         Cursor data = null;
         String[] fragmentdate = new String[1];
         Uri footballScoresToday = DatabaseContract.scores_table.buildScoreWithDate();
@@ -319,9 +326,13 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             if(data != null)
             {
                 Log.v(LOG_TAG, mformat.format(mDate) + " " + String.valueOf(data.getCount()));
+                String value = mformat.format(mDate) + " " + String.valueOf(data.getCount());
+                editor.putString(value, context.getString(R.string.today_match_count_key));
             }
             data.close();
         }
+
+
     }
 
     /**

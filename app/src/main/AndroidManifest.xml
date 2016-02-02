@@ -75,7 +75,8 @@
         </service>
 
         <!-- Single widget. Disabled from bools. -->
-        <receiver android:name=".Widget.TodayWidgetProvider"
+        <receiver
+            android:name=".Widget.TodayWidgetProvider"
             android:enabled="@bool/widget_single_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
