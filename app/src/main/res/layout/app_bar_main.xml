@@ -20,6 +20,14 @@
 
 
         <TextView
+            android:id="@+id/toolbar_match_count_outgoing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 matches"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal|top"/>
+        <TextView
+            android:id="@+id/toolbar_match_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2 matches"

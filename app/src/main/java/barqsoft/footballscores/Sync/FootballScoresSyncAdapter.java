@@ -278,8 +278,6 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI, insert_data);
 
-
-            updateDayMatchCount();
             updateWidgets();
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
@@ -297,43 +295,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         context.sendBroadcast(dataUpdatedIntent);
     }
 
-    // Base for DayMatchCount, which will be displayed inside
-    // the appBar when expanded.
-    private void updateDayMatchCount() {
 
-
-
-        Context context = getContext();
-        SharedPreferences settings = context.getSharedPreferences(
-                context.getString(R.string.today_match_count_pref), context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-
-        Cursor data = null;
-        String[] fragmentdate = new String[1];
-        Uri footballScoresToday = DatabaseContract.scores_table.buildScoreWithDate();
-        for (int i = 0; i < SectionsPagerAdapter.NUM_PAGES; i++)
-        {
-            Date mDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-            fragmentdate[0] = mformat.format(mDate);
-
-            data = context.getContentResolver().query(footballScoresToday,
-                    null,
-                    null,
-                    fragmentdate,
-                    null);
-
-            if(data != null)
-            {
-                Log.v(LOG_TAG, mformat.format(mDate) + " " + String.valueOf(data.getCount()));
-                String value = mformat.format(mDate) + " " + String.valueOf(data.getCount());
-                editor.putString(value, context.getString(R.string.today_match_count_key));
-            }
-            data.close();
-        }
-
-
-    }
 
     /**
      * Helper method to schedule the sync adapter periodic execution

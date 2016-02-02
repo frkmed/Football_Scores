@@ -1,16 +1,22 @@
 package barqsoft.footballscores.Utils;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.text.format.Time;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 
+import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 
 /**
  * Created by paskalstoyanov on 21/01/16.
  */
 public class Utility {
+
+    final String LOG_TAG = Utility.class.getSimpleName();
 
 
 
@@ -38,8 +44,27 @@ public class Utility {
         }
     }
 
-    public void UpdateDayMatchCount()
+    public static String getMatchDayCount(String match_day, Context context)
     {
+        Context mContext = context;
+        Cursor data = null;
+        String[] fragmentdate = new String[1];
+        Uri footballScoresToday = DatabaseContract.scores_table.buildScoreWithDate();
+        fragmentdate[0] = match_day;
+        data = context.getContentResolver().query(footballScoresToday,
+                null,
+                null,
+                fragmentdate,
+                null);
 
+        if(data != null)
+        {
+            data.close();
+            String dayMatchCount = String.valueOf(data.getCount()) + " matches";
+            return dayMatchCount;
+        }
+        data.close();
+
+        return "Not available";
     }
 }
