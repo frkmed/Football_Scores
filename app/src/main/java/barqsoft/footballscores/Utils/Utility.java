@@ -37,4 +37,9 @@ public class Utility {
             return dayFormat.format(dateInMillis);
         }
     }
+
+    public void UpdateDayMatchCount()
+    {
+
+    }
 }

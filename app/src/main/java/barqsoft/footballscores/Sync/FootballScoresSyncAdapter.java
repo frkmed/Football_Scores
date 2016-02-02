@@ -10,9 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import barqsoft.footballscores.Adapters.SectionsPagerAdapter;
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 
@@ -42,7 +45,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
     // Interval at which to sync with the weather, in seconds.
     // 60 seconds (1 minute) * 360 = 6 hours
     public static final int SYNC_INTERVAL = 60 * 360;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     public FootballScoresSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -56,8 +59,8 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         getData("p2");
 
     }
-    private void getData (String timeFrame)
-    {
+
+    private void getData(String timeFrame) {
         //Creating fetch URL
         final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
@@ -76,7 +79,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             m_connection.setRequestMethod("GET");
             // TODO: Switch back to R.string.api_key when submitting.
             //m_connection.addRequestProperty("X-Auth-Token",getString(R.string.api_key));
-            m_connection.addRequestProperty("X-Auth-Token",getContext().getString(R.string.Football_api_key));
+            m_connection.addRequestProperty("X-Auth-Token", getContext().getString(R.string.Football_api_key));
             m_connection.connect();
 
             // Read the input stream into a String
@@ -100,24 +103,17 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                 return;
             }
             JSON_data = buffer.toString();
-        }
-        catch (Exception e)
-        {
-            Log.e(LOG_TAG,"Exception here" + e.getMessage());
-        }
-        finally {
-            if(m_connection != null)
-            {
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Exception here" + e.getMessage());
+        } finally {
+            if (m_connection != null) {
                 m_connection.disconnect();
             }
-            if (reader != null)
-            {
+            if (reader != null) {
                 try {
                     reader.close();
-                }
-                catch (IOException e)
-                {
-                    Log.e(LOG_TAG,"Error Closing Stream");
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Error Closing Stream");
                 }
             }
         }
@@ -140,14 +136,12 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                 //Could not Connect
                 Log.d(LOG_TAG, "Could not connect to server.");
             }
-        }
-        catch(Exception e)
-        {
-            Log.e(LOG_TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage());
         }
     }
-    private void processJSONdata (String JSONdata,Context mContext, boolean isReal)
-    {
+
+    private void processJSONdata(String JSONdata, Context mContext, boolean isReal) {
         //JSON data
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
@@ -196,63 +190,59 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector <ContentValues> (matches.length());
-            for(int i = 0;i < matches.length();i++)
-            {
+            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            for (int i = 0; i < matches.length(); i++) {
 
                 JSONObject match_data = matches.getJSONObject(i);
 
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
-                League = League.replace(SEASON_LINK,"");
+                League = League.replace(SEASON_LINK, "");
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
-                if(     League.equals(PREMIER_LEAGUE)      ||
-                        League.equals(LIGUE1)              ||
-                        League.equals(LIGUE2)              ||
-                        League.equals(SERIE_A)             ||
-                        League.equals(BUNDESLIGA1)         ||
-                        League.equals(BUNDESLIGA2)         ||
-                        League.equals(Bundesliga3)         ||
-                        League.equals(PRIMEIRA_LIGA)       ||
-                        League.equals(EREDIVISIE)          ||
-                        League.equals(PRIMERA_DIVISION)    ||
-                        League.equals(SEGUNDA_DIVISION)     )
-                {
+                if (League.equals(PREMIER_LEAGUE) ||
+                        League.equals(LIGUE1) ||
+                        League.equals(LIGUE2) ||
+                        League.equals(SERIE_A) ||
+                        League.equals(BUNDESLIGA1) ||
+                        League.equals(BUNDESLIGA2) ||
+                        League.equals(Bundesliga3) ||
+                        League.equals(PRIMEIRA_LIGA) ||
+                        League.equals(EREDIVISIE) ||
+                        League.equals(PRIMERA_DIVISION) ||
+                        League.equals(SEGUNDA_DIVISION)) {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");
                     match_id = match_id.replace(MATCH_LINK, "");
-                    if(!isReal){
+                    if (!isReal) {
                         //This if statement changes the match ID of the dummy data so that it all goes into the database
-                        match_id=match_id+Integer.toString(i);
+                        match_id = match_id + Integer.toString(i);
                     }
 
                     mDate = match_data.getString(MATCH_DATE);
                     mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
-                    mDate = mDate.substring(0,mDate.indexOf("T"));
+                    mDate = mDate.substring(0, mDate.indexOf("T"));
                     SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
                     match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
-                        Date parseddate = match_date.parse(mDate+mTime);
+                        Date parseddate = match_date.parse(mDate + mTime);
                         SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
                         new_date.setTimeZone(TimeZone.getDefault());
                         mDate = new_date.format(parseddate);
                         mTime = mDate.substring(mDate.indexOf(":") + 1);
-                        mDate = mDate.substring(0,mDate.indexOf(":"));
+                        mDate = mDate.substring(0, mDate.indexOf(":"));
 
-                        if(!isReal){
+                        if (!isReal) {
                             //This if statement changes the dummy data's date to match our current date range.
-                            Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
+                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
                             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                            mDate=mformat.format(fragmentdate);
+                            mDate = mformat.format(fragmentdate);
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Log.d(LOG_TAG, "error here!");
-                        Log.e(LOG_TAG,e.getMessage());
+                        Log.e(LOG_TAG, e.getMessage());
                     }
                     Home = match_data.getString(HOME_TEAM);
                     Away = match_data.getString(AWAY_TEAM);
@@ -260,15 +250,15 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                     Away_goals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
                     match_day = match_data.getString(MATCH_DAY);
                     ContentValues match_values = new ContentValues();
-                    match_values.put(DatabaseContract.scores_table.MATCH_ID,match_id);
-                    match_values.put(DatabaseContract.scores_table.DATE_COL,mDate);
-                    match_values.put(DatabaseContract.scores_table.TIME_COL,mTime);
-                    match_values.put(DatabaseContract.scores_table.HOME_COL,Home);
-                    match_values.put(DatabaseContract.scores_table.AWAY_COL,Away);
-                    match_values.put(DatabaseContract.scores_table.HOME_GOALS_COL,Home_goals);
-                    match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL,Away_goals);
-                    match_values.put(DatabaseContract.scores_table.LEAGUE_COL,League);
-                    match_values.put(DatabaseContract.scores_table.MATCH_DAY,match_day);
+                    match_values.put(DatabaseContract.scores_table.MATCH_ID, match_id);
+                    match_values.put(DatabaseContract.scores_table.DATE_COL, mDate);
+                    match_values.put(DatabaseContract.scores_table.TIME_COL, mTime);
+                    match_values.put(DatabaseContract.scores_table.HOME_COL, Home);
+                    match_values.put(DatabaseContract.scores_table.AWAY_COL, Away);
+                    match_values.put(DatabaseContract.scores_table.HOME_GOALS_COL, Home_goals);
+                    match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, Away_goals);
+                    match_values.put(DatabaseContract.scores_table.LEAGUE_COL, League);
+                    match_values.put(DatabaseContract.scores_table.MATCH_DAY, match_day);
                     //log spam
 
                     //Log.v(LOG_TAG,match_id);
@@ -286,14 +276,14 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);
             inserted_data = mContext.getContentResolver().bulkInsert(
-                    DatabaseContract.BASE_CONTENT_URI,insert_data);
+                    DatabaseContract.BASE_CONTENT_URI, insert_data);
 
+
+            updateDayMatchCount();
             updateWidgets();
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
-        }
-        catch (JSONException e)
-        {
-            Log.e(LOG_TAG,e.getMessage());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage());
         }
 
     }
@@ -307,6 +297,32 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         context.sendBroadcast(dataUpdatedIntent);
     }
 
+    // Base for DayMatchCount, which will be displayed inside
+    // the appBar when expanded.
+    private void updateDayMatchCount() {
+        Context context = getContext();
+        Cursor data = null;
+        String[] fragmentdate = new String[1];
+        Uri footballScoresToday = DatabaseContract.scores_table.buildScoreWithDate();
+        for (int i = 0; i < SectionsPagerAdapter.NUM_PAGES; i++)
+        {
+            Date mDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+            fragmentdate[0] = mformat.format(mDate);
+
+            data = context.getContentResolver().query(footballScoresToday,
+                    null,
+                    null,
+                    fragmentdate,
+                    null);
+
+            if(data != null)
+            {
+                Log.v(LOG_TAG, mformat.format(mDate) + " " + String.valueOf(data.getCount()));
+            }
+            data.close();
+        }
+    }
 
     /**
      * Helper method to schedule the sync adapter periodic execution
@@ -326,8 +342,10 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                     authority, new Bundle(), syncInterval);
         }
     }
+
     /**
      * Helper method to have the sync adapter sync immediately
+     *
      * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context) {
@@ -356,8 +374,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
         Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
         // If the password doesn't exist, the account doesn't exist
-        if ( null == accountManager.getPassword(newAccount))
-        {
+        if (null == accountManager.getPassword(newAccount)) {
 
         /*
          * Add the account and account type, no password or user data

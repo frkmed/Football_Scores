@@ -48,35 +48,10 @@ public class DetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
+            // Being here means we are in animation mode
+            supportPostponeEnterTransition();
+
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.detail_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case android.R.id.home:
-                this.finish();
-                return (true);
-            case R.id.action_about:
-                Intent start_about = new Intent(this, AboutActivity.class);
-                startActivity(start_about);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 

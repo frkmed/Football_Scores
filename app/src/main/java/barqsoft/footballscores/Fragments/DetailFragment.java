@@ -24,6 +24,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,7 +138,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mShareButton.setVisibility(View.VISIBLE);
 
 
-
         // Details additional pane
         totalMatches_count = (TextView) rootView.findViewById(R.id.detail_total_matches_count_textview);
         homeTeam_name_add_pane = (TextView) rootView.findViewById(R.id.home_name_label_textview);
@@ -148,20 +149,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         requestQueue = Volley.newRequestQueue(getActivity());
 
 
-
         return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if (savedInstanceState == null){
-            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-        }
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
-    public Loader<Cursor> onCreateLoader(int id, Bundle args)
-    {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (mMatch_Id != null || mMatch_Id.length() > 0) {
 
             //Log.v(LOG_TAG, mUri.toString());
@@ -174,7 +171,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     fragment_match_id,
                     null
             );
-
 
 
         }
@@ -214,9 +210,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         awayTeam_name_add_pane.setText(dataAwayName);
 
 
-
-
-
         CustomJsonObjectRequest jsonObjectRequest = new CustomJsonObjectRequest(Request.Method.GET,
                 "http://api.football-data.org/v1/fixtures/" + data.getString(COL_ID),
                 new JSONObject(),
@@ -244,13 +237,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     }
 
 
-
-
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
+                    public void onErrorResponse(VolleyError error) {
 
                     }
                 }
@@ -264,10 +254,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
-    public class CustomJsonObjectRequest extends JsonObjectRequest
-    {
-        public CustomJsonObjectRequest(int method, String url, JSONObject jsonRequest, Response.Listener listener, Response.ErrorListener errorListener)
-        {
+    public class CustomJsonObjectRequest extends JsonObjectRequest {
+        public CustomJsonObjectRequest(int method, String url, JSONObject jsonRequest, Response.Listener listener, Response.ErrorListener errorListener) {
             super(method, url, jsonRequest, listener, errorListener);
         }
 
