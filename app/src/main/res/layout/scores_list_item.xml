@@ -3,9 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background"
+    android:focusable="true"
     android:elevation="4dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/scores_list_card">
 
     <LinearLayout
         android:id="@+id/main_text"

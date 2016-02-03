@@ -12,6 +12,7 @@ public class TextAnimator {
     private final SectionsPagerAdapter.myPageAdapter pagerAdapter;
     private final TextView outgoing;
     private final TextView textView;
+    private static final float FACTOR = 0.1f;
 
     private int actualStart;
     private int start;
@@ -53,11 +54,17 @@ public class TextAnimator {
 
     public void forward(int position, float positionOffset) {
         float offset = getOffset(position, positionOffset);
+        int width = textView.getWidth();
+        outgoing.setTranslationX(-offset * (FACTOR * width));
+        textView.setTranslationX((1 - offset) * (FACTOR * width));
         textView.setAlpha(offset);
     }
 
     public void backwards(int position, float positionOffset) {
         float offset = getOffset(position, positionOffset);
+        int width = textView.getWidth();
+        outgoing.setTranslationX((1 - offset) * (FACTOR * width));
+        textView.setTranslationX(-(offset) * (FACTOR * width));
         textView.setAlpha(1 - offset);
     }
 

@@ -9,7 +9,9 @@ import barqsoft.footballscores.Adapters.SectionsPagerAdapter;
 
 /**
  * Created by paskalstoyanov on 02/02/16.
+ * A modified version of https://blog.stylingandroid.com/appbar-part-2/
  */
+
 public class PageChangeListener implements ViewPager.OnPageChangeListener {
 
     private final TextAnimator textAnimator;

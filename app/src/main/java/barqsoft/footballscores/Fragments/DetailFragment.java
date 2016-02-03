@@ -78,6 +78,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_ID = 8;
     public static final int COL_MATCHTIME = 2;
 
+    private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
+
+
     private TextView textView;
     RequestQueue requestQueue;
 
@@ -134,8 +137,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         dataDateTextview = (TextView) rootView.findViewById(R.id.data_date_textview);
         leagueTextview = (TextView) rootView.findViewById(R.id.league_textview);
         matchdayTextview = (TextView) rootView.findViewById(R.id.matchday_textview);
+        // Share button
         mShareButton = (Button) rootView.findViewById(R.id.share_button);
         mShareButton.setVisibility(View.VISIBLE);
+
+
+        rootView.findViewById(R.id.scores_list_card).setFocusable(false);
+
 
 
         // Details additional pane
@@ -185,9 +193,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
 
         // Detail Score List Item
-        String dataHomeName = data.getString(COL_HOME);
-        String dataAwayName = data.getString(COL_AWAY);
-        String score = Utilies.getScores(data.getInt(COL_HOME_GOALS), data.getInt(COL_AWAY_GOALS));
+        final String dataHomeName = data.getString(COL_HOME);
+        final String dataAwayName = data.getString(COL_AWAY);
+        final String score = Utilies.getScores(data.getInt(COL_HOME_GOALS), data.getInt(COL_AWAY_GOALS));
         String dataDate = data.getString(COL_MATCHTIME);
         String league = Utilies.getLeague(data.getInt(COL_LEAGUE));
         String matchday = Utilies.getMatchDay(data.getInt(COL_MATCHDAY),
@@ -203,6 +211,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         dataDateTextview.setText(dataDate);
         leagueTextview.setText(league);
         matchdayTextview.setText(matchday);
+
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                //add Share Action
+                getContext().startActivity(createShareForecastIntent(dataHomeName + " "
+                        + score +" "+ dataAwayName + " "));
+            }
+        });
 
 
         // Detail additional pane
@@ -266,5 +284,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             return headers;
         }
 
+    }
+
+    // Share Match Intent
+    public Intent createShareForecastIntent(String ShareText) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
+        return shareIntent;
     }
 }

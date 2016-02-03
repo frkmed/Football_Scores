@@ -1,8 +1,12 @@
 package barqsoft.footballscores.Utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -10,6 +14,7 @@ import java.text.SimpleDateFormat;
 
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.Sync.FootballScoresSyncAdapter;
 
 /**
  * Created by paskalstoyanov on 21/01/16.
@@ -67,4 +72,33 @@ public class Utility {
 
         return "Not available";
     }
+
+    /**
+     * Returns true if the network is available or about to become available.
+     *
+     * @param c Context used to get the ConnectivityManager
+     * @return
+     */
+    static public boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm =
+                (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
+    /**
+     *
+     * @param c Context used to get the SharedPreferences
+     * @return the location status integer type
+     */
+    @SuppressWarnings("ResourceType")
+    static public @FootballScoresSyncAdapter.ScoresStatus
+    int getScoresStatus(Context c){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        return sp.getInt(c.getString(R.string.pref_football_data_status_key), FootballScoresSyncAdapter.SCORES_STATUS_UNKNOWN);
+    }
+
+
 }

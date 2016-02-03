@@ -11,10 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -25,6 +26,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -32,7 +35,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import barqsoft.footballscores.Adapters.SectionsPagerAdapter;
 import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 
@@ -46,6 +48,18 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
     // 60 seconds (1 minute) * 360 = 6 hours
     public static final int SYNC_INTERVAL = 60 * 360;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SCORES_STATUS_OK, SCORES_STATUS_SERVER_DOWN, SCORES_STATUS_SERVER_INVALID, SCORES_STATUS_UNKNOWN})
+    public @interface ScoresStatus {
+    }
+
+    public static final int SCORES_STATUS_OK = 0;
+    public static final int SCORES_STATUS_SERVER_DOWN = 1;
+    public static final int
+            SCORES_STATUS_SERVER_INVALID = 2;
+    public static final int
+            SCORES_STATUS_UNKNOWN = 3;
 
     public FootballScoresSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -100,12 +114,16 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             }
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
+                setScoresStatus(getContext(), SCORES_STATUS_SERVER_DOWN);
                 return;
             }
             JSON_data = buffer.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "Exception here" + e.getMessage());
-        } finally {
+            // If the code didn't successfully get the football data, there's no point in attempting
+            // to parse it.
+            setScoresStatus(getContext(), SCORES_STATUS_SERVER_DOWN);
+        }  finally {
             if (m_connection != null) {
                 m_connection.disconnect();
             }
@@ -282,6 +300,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
+            setScoresStatus(getContext(), SCORES_STATUS_SERVER_INVALID);
         }
 
     }
@@ -294,7 +313,6 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
     }
-
 
 
     /**
@@ -387,5 +405,19 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
+    }
+
+    /**
+     * Sets the football data status into shared preference.  This function should not be called from
+     * the UI thread because it uses commit to write to the shared preferences.
+     *
+     * @param c           Context to get the PreferenceManager from.
+     * @param scoreStatus The IntDef value to set
+     */
+    static private void setScoresStatus(Context c, @ScoresStatus int scoreStatus) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(c.getString(R.string.pref_football_data_status_key), scoreStatus);
+        spe.commit();
     }
 }

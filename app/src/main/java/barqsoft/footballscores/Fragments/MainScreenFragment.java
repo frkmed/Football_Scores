@@ -1,11 +1,11 @@
 package barqsoft.footballscores.Fragments;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -28,11 +28,13 @@ import barqsoft.footballscores.Database.DatabaseContract;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Adapters.RecyclerScoresAdapter;
 import barqsoft.footballscores.Sync.FootballScoresSyncAdapter;
+import barqsoft.footballscores.Utils.Utility;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
     public RecyclerScoresAdapter mRecyclerScoresAdapter;
@@ -54,6 +56,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     public MainScreenFragment() {
     }
+
+
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -83,6 +87,20 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         //setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 
 
@@ -219,6 +237,19 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             if (null != tv) {
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_scores_list;
+                @FootballScoresSyncAdapter.ScoresStatus int location = Utility.getScoresStatus(getActivity());
+                switch (location) {
+                    case FootballScoresSyncAdapter.SCORES_STATUS_SERVER_DOWN:
+                        message = R.string.empty_scores_list_server_down;
+                        break;
+                    case FootballScoresSyncAdapter.SCORES_STATUS_SERVER_INVALID:
+                        message = R.string.empty_scores_list_server_error;
+                        break;
+                    default:
+                        if (!Utility.isNetworkAvailable(getActivity())) {
+                            message = R.string.empty_scores_list_no_network;
+                        }
+                }
                 tv.setText(message);
             }
         }
@@ -237,7 +268,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mRecyclerScoresAdapter.swapCursor(null);
     }
 
-
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if ( key.equals(getString(R.string.pref_football_data_status_key)) ) {
+            updateEmptyView();
+        }
+    }
 
 
 }
