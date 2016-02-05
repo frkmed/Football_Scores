@@ -122,7 +122,6 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(LOG_TAG, "Exception here" + e.getMessage());
             // If the code didn't successfully get the football data, there's no point in attempting
             // to parse it.
-            setScoresStatus(getContext(), SCORES_STATUS_SERVER_DOWN);
         }  finally {
             if (m_connection != null) {
                 m_connection.disconnect();
@@ -363,9 +362,11 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         // Create the account type and default account
         Account newAccount = new Account(
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
-        Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
+        //Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
         // If the password doesn't exist, the account doesn't exist
-        if (null == accountManager.getPassword(newAccount)) {
+        if (null == accountManager.getPassword(newAccount))
+        {
+            //Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
 
         /*
          * Add the account and account type, no password or user data
@@ -400,6 +401,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
+        //Log.v("SyncAdapter", "onAccountCreated");
         syncImmediately(context);
     }
 

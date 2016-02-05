@@ -78,8 +78,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_ID = 8;
     public static final int COL_MATCHTIME = 2;
 
-    private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
-
 
     private TextView textView;
     RequestQueue requestQueue;
@@ -208,9 +206,25 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         awayCrest.setImageResource(Utilies.getTeamCrestByTeamName(
                 data.getString(COL_AWAY)));
         scoreText.setText(score);
+
         dataDateTextview.setText(dataDate);
         leagueTextview.setText(league);
         matchdayTextview.setText(matchday);
+
+        if (data.getInt(COL_HOME_GOALS) == -1 )
+        {
+            scoreText.setContentDescription(getString(R.string.a11y_score_waiting));
+        }
+        else
+        {
+            scoreText.setContentDescription(getString(R.string.a11y_score,score));
+        }
+        homeCrest.setContentDescription(null);
+        awayCrest.setContentDescription(null);
+        leagueTextview.setContentDescription(getString(R.string.a11y_league, league));
+
+
+        mShareButton.setContentDescription(getContext().getString(R.string.share_text));
 
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,7 +305,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + getString(R.string.football_scores_hashtag));
         return shareIntent;
     }
 }

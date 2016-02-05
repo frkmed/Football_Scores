@@ -1,9 +1,5 @@
 package barqsoft.footballscores.Widget;
 
-/**
- * Created by paskalstoyanov on 01/02/16.
- */
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +20,8 @@ import barqsoft.footballscores.R;
 import barqsoft.footballscores.Utils.Utilies;
 
 /**
- * RemoteViewsService controlling the data being shown in the scrollable weather detail widget
+ * RemoteViewsService controlling the data being shown in the scrollable weather detail widget.
+ * Created by paskalstoyanov on 01/02/16.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailWidgetRemoteViewsService extends RemoteViewsService {
@@ -102,7 +99,8 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                 int home_crest = Utilies.getTeamCrestByTeamName(data.getString(COL_HOME));
                 int away_crest = Utilies.getTeamCrestByTeamName(data.getString(COL_AWAY));
 
-                String description = data.getString(COL_HOME);
+                String description;
+
 
                 String HomeTeam = data.getString(COL_HOME);
                 String AwayTeam = data.getString(COL_AWAY);
@@ -118,6 +116,14 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                         Utilies.getScores(homeGoals, awayGoals);
                 String dateText = data.getString(COL_MATCHTIME);
                 views.setTextViewText(R.id.score_textview,formattedScore);
+                if (homeGoals == -1)
+                {
+                    description = getString(R.string.a11y_score_waiting);
+                }
+                else
+                {
+                    description = getString(R.string.a11y_score, formattedScore);
+                }
                 views.setTextViewText(R.id.data_date_textview, dateText);
 
                 views.setImageViewResource(R.id.home_crest, home_crest);
@@ -137,7 +143,9 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
 
             @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             private void setRemoteContentDescription(RemoteViews views, String description) {
-                views.setContentDescription(R.id.widget_icon, description);
+                views.setContentDescription(R.id.home_crest, null);
+                views.setContentDescription(R.id.away_crest, null);
+                views.setContentDescription(R.id.score_textview, description);
             }
 
             @Override

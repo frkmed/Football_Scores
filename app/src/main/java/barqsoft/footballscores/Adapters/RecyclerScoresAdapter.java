@@ -174,15 +174,17 @@ public class RecyclerScoresAdapter extends RecyclerView.Adapter<RecyclerScoresAd
         String League = Utilies.getLeague(mCursor.getInt(COL_LEAGUE));
         scoresAdapterViewHolder.mLeague_Text.setText(League);
 
-        scoresAdapterViewHolder.mShare_Button.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v)
-              {
-                  //add Share Action
-                  mContext.startActivity(createShareForecastIntent(HomeTeam + " "
-                  + scoreText +" "+ AwayTeam + " "));
-              }
-          });
+        if (mCursor.getInt(COL_HOME_GOALS) == -1 )
+        {
+            scoresAdapterViewHolder.mScoreText.setContentDescription(mContext.getString(R.string.a11y_score_waiting));
+        }
+        else
+        {
+            scoresAdapterViewHolder.mScoreText.setContentDescription(mContext.getString(R.string.a11y_score,scoreText));
+        }
+        scoresAdapterViewHolder.mHome_Crest.setContentDescription(null);
+        scoresAdapterViewHolder.mAway_Crest.setContentDescription(null);
+        scoresAdapterViewHolder.mLeague_Text.setContentDescription(mContext.getString(R.string.a11y_league, League));
 
         mICM.onBindViewHolder(scoresAdapterViewHolder, position);
 
@@ -235,13 +237,7 @@ public class RecyclerScoresAdapter extends RecyclerView.Adapter<RecyclerScoresAd
         return mCursor;
     }
 
-    public Intent createShareForecastIntent(String ShareText) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
-        return shareIntent;
-    }
+
 
 
 }

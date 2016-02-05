@@ -44,12 +44,12 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="barqsoft.footballscores.Activities.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
 
         <provider
             android:name=".Database.ScoresProvider"
-            android:authorities="@string/content_authority"
+            android:authorities="barqsoft.footballscores"
             android:exported="false"
             android:syncable="true" />
 
