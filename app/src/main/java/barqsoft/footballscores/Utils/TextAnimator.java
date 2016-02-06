@@ -19,6 +19,8 @@ public class TextAnimator {
     private int end;
     private float positionFactor;
 
+
+    // TODO: switch with textswitcher
     public TextAnimator(SectionsPagerAdapter.myPageAdapter pagerAdapter, TextView textView, TextView outgoing) {
         this.pagerAdapter = pagerAdapter;
         this.textView = textView;

@@ -144,6 +144,9 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                     //this is expected behavior during the off season.
                     //processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                     //Log.d(LOG_TAG, JSON_data.toString());
+
+                    // Unlike Sunshine, in Football scores there is no
+                    // guarantee that there will data for the given time frame.
                     return;
                 }
 
@@ -364,6 +367,12 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
         //Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
         // If the password doesn't exist, the account doesn't exist
+
+        // Gave an error:
+        // caller uid XXXX is different than the authenticator's uid
+        // After switching android:authorities="barqsoft.footballscores" with
+        // hard coded string instead of a value inside @string,
+        // the problem seems to be solved.
         if (null == accountManager.getPassword(newAccount))
         {
             //Log.v("SyncAdapter", context.getString(R.string.sync_account_type));
