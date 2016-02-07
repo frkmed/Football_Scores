@@ -294,7 +294,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         public Map getHeaders() throws AuthFailureError {
             Map headers = new HashMap();
-            headers.put("X-Auth-Token", getString(R.string.Football_api_key));
+            headers.put("X-Auth-Token", getString(R.string.api_key));
             return headers;
         }
 
