@@ -93,7 +93,7 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
             m_connection.setRequestMethod("GET");
             // TODO: Switch back to R.string.api_key when submitting.
             //m_connection.addRequestProperty("X-Auth-Token",getString(R.string.api_key));
-            m_connection.addRequestProperty("X-Auth-Token", getContext().getString(R.string.Football_api_key));
+            m_connection.addRequestProperty("X-Auth-Token", getContext().getString(R.string.api_key));
             m_connection.connect();
 
             // Read the input stream into a String
